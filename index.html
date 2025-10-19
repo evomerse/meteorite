@@ -6,6 +6,7 @@
     <title>Météorite — la météo, simplement</title>
     <meta name="description" content="Recherchez votre ville et obtenez la météo en un clin d'œil."/>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="background.css">
   </head>
   <body>
     <header class="app-header">
@@ -18,6 +19,29 @@
         <div id="suggestions" class="suggestions" role="listbox" aria-live="polite"></div>
       </form>
     </header>
+
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+
+    <script>
+      function createStars(id, count, size) {
+        const stars = [];
+        for (let i = 0; i < count; i++) {
+          const x = Math.floor(Math.random() * 2000);
+          const y = Math.floor(Math.random() * 2000);
+          stars.push(`${x}px ${y}px #FFF`);
+        }
+        const el = document.getElementById(id);
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+        el.style.boxShadow = stars.join(', ');
+      }
+
+      createStars('stars', 200, 1);   // Petites étoiles (200)
+      createStars('stars2', 100, 2);  // Moyennes (100)
+      createStars('stars3', 50, 3);   // Grosses (50)
+    </script>
 
     <main id="content" class="content" hidden>
       <section class="location">

@@ -1,0 +1,105 @@
+/* Fond global */
+html, body {
+  height: 100;
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+  color: white;
+  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+  overflow-x: hidden;
+}
+
+/* Les trois calques d’étoiles */
+#stars, #stars2, #stars3 {
+  position: fixed;  /* Fixé à l’écran, pas au contenu */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background: transparent;
+  z-index: 0;  /* derrière le contenu */
+}
+
+/* Étoiles petites */
+#stars {
+  width: 1px;
+  height: 1px;
+  box-shadow: 
+    1234px 543px #FFF, 532px 1543px #FFF, 934px 1832px #FFF, 
+    1823px 732px #FFF, 1453px 1232px #FFF, 453px 832px #FFF,
+    1532px 345px #FFF, 1934px 523px #FFF, 245px 1243px #FFF;
+  animation: animStar 50s linear infinite;
+}
+
+#stars::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  width: 1px;
+  height: 1px;
+  box-shadow: inherit;
+}
+
+/* Étoiles moyennes */
+#stars2 {
+  width: 2px;
+  height: 2px;
+  box-shadow: 
+    432px 1324px #FFF, 932px 432px #FFF, 1723px 1432px #FFF, 
+    132px 932px #FFF, 623px 523px #FFF, 1832px 232px #FFF;
+  animation: animStar 100s linear infinite;
+}
+
+#stars2::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  width: 2px;
+  height: 2px;
+  box-shadow: inherit;
+}
+
+/* Étoiles grosses */
+#stars3 {
+  width: 3px;
+  height: 3px;
+  box-shadow: 
+    532px 324px #FFF, 932px 1432px #FFF, 1832px 832px #FFF, 
+    232px 132px #FFF, 723px 623px #FFF;
+  animation: animStar 150s linear infinite;
+}
+
+#stars3::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  width: 3px;
+  height: 3px;
+  box-shadow: inherit;
+}
+
+/* Animation lente vers le haut */
+@keyframes animStar {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-2000px); }
+}
+
+/* Titre sur la page d’accueil */
+#title {
+  text-align: center;
+  font-weight: 300;
+  font-size: 50px;
+  letter-spacing: 10px;
+  z-index: 1;  /* devant les étoiles */
+  position: relative;
+}
+
+#title span {
+  background: -webkit-linear-gradient(white, #38495a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Météorite — la météo, simplement</title>
+    <meta name="description" content="Recherchez votre ville et obtenez la météo en un clin d'œil."/>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>☄️ Météorite</h1>
+      <p class="tagline">Tapez une ville, obtenez la météo.</p>
+      <form id="search-form" autocomplete="off" role="search" aria-label="Recherche de ville">
+        <label for="search" class="sr-only">Rechercher une ville</label>
+        <input id="search" name="q" type="text" placeholder="Ex: Paris, Marseille, Lyon…" aria-autocomplete="list" aria-controls="suggestions"/>
+        <button type="submit" aria-label="Rechercher">🔎</button>
+        <div id="suggestions" class="suggestions" role="listbox" aria-live="polite"></div>
+      </form>
+    </header>
+
+    <main id="content" class="content" hidden>
+      <section class="location">
+        <h2 id="loc-name">—</h2>
+        <p id="loc-extra" class="muted">—</p>
+      </section>
+
+      <section class="current">
+        <div class="card">
+          <div class="current-main">
+            <div>
+              <div class="current-temp" id="current-temp">--°C</div>
+              <div class="current-desc" id="current-desc">—</div>
+            </div>
+            <div class="current-icon" id="current-icon" aria-hidden="true">⛅</div>
+          </div>
+          <div class="current-grid">
+            <div><span>Vent</span><strong id="current-wind">— km/h</strong></div>
+            <div><span>Humidité</span><strong id="current-humidity">—%</strong></div>
+            <div><span>Ressenti</span><strong id="current-apparent">—°C</strong></div>
+            <div><span>Pression</span><strong id="current-pressure">— hPa</strong></div>
+          </div>
+          <p class="updated" id="updated">—</p>
+        </div>
+      </section>
+
+      <section class="forecast">
+        <h3>Prévisions 24h</h3>
+        <div id="hourly" class="hourly"></div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <small>Source: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open‑Meteo</a>. Projet démo sans clé API.</small>
+    </footer>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>

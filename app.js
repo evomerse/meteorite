@@ -1,3 +1,14 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.getElementById("navToggle");
+  const links = document.getElementById("navLinks");
+
+  toggle.addEventListener("click", () => {
+    links.classList.toggle("open");
+    toggle.textContent = links.classList.contains("open") ? "✕" : "☰";
+  });
+});
+
+
 // Météorite v1 — client only, API Open‑Meteo (pas de clé nécessaire)
 const els = {
   content: document.getElementById('content'),
@@ -96,6 +107,8 @@ async function selectPlace(place){
     const app = hourly.apparent_temperature[idxNow];
     const press = hourly.pressure_msl[idxNow];
     const info = codeToInfo(cw.weathercode);
+    updateBackground(cw.weathercode);
+
     els.currentTemp.textContent = `${Math.round(cw.temperature)}°C`;
     els.currentDesc.textContent = info.desc;
     els.currentIcon.textContent = info.icon;
@@ -170,3 +183,22 @@ try{
   const last = JSON.parse(localStorage.getItem('meteorite:last')||'null');
   if(last?.latitude && last?.longitude){ selectPlace(last); }
 }catch{}
+
+
+
+
+
+
+
+function updateBackground(weatherCode) {
+  const body = document.body;
+  body.className = ""; // reset
+
+  if ([0].includes(weatherCode)) body.classList.add("bg-clear");
+  else if ([1, 2, 3].includes(weatherCode)) body.classList.add("bg-cloudy");
+  else if ([61, 63, 65, 80, 81, 82].includes(weatherCode)) body.classList.add("bg-rain");
+  else if ([71, 73, 75, 77, 85, 86].includes(weatherCode)) body.classList.add("bg-snow");
+  else if ([95, 96, 99].includes(weatherCode)) body.classList.add("bg-storm");
+  else if ([45, 48].includes(weatherCode)) body.classList.add("bg-fog");
+  else body.classList.add("bg-cloudy");
+}

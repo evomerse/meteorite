@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Carte Météo - Météorite</title>
+
+  <!-- Feuille de style principale -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Feuille de style Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Police -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+
+    :root {
+    --text: #3a3a3a;
+    }
+
+    body {
+    color: var(--text);
+    }
+
+    h1 {
+        color: white;
+    }
+
+    a {
+        color: white;
+    }
+
+    /* Adaptation au style verre liquide */
+    .map-container {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    #map {
+      height: 500px;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    }
+
+    .map-title {
+      text-align: center;
+      font-size: clamp(24px, 4vw, 36px);
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    .map-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .btn-city {
+      padding: 10px 20px;
+      margin-top: 20px;
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      background: var(--glass-bg);
+      color: var(--text);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    }
+    .btn-city:hover,
+    .btn-city.active {
+      background: var(--accent);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .city-marker {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 16px;
+      font-size: 13px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    }
+
+  </style>
+</head>
+<body>
+
+    <nav class="app-navbar">
+        <div class="nav-logo">
+            <a href="index.html">☄️ Météorite</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-item">Accueil</a>
+            <a href="carte.html" class="nav-item">Carte</a>
+            <a href="dashboard.html" class="nav-item">Dashboard</a>
+            <a href="settings.html" class="nav-item">Paramètres</a>
+        </div>
+        <div class="nav-auth">
+            <a href="login.html" class="nav-button">Connexion</a>
+            <a href="register.html" class="nav-button accent">Inscription</a>
+        </div>
+        <button class="nav-toggle" aria-label="Menu">☰</button>
+    </nav>
+
+  <header class="app-header">
+    <h1>🗺️ Carte Météo Interactive</h1>
+    <p class="tagline">Explorez la météo en direct dans les grandes villes de France</p>
+  </header>
+
+  <main class="map-container card">
+    <div class="map-controls">
+      <button class="btn-city" data-city="Paris" data-lat="48.8566" data-lon="2.3522">Paris</button>
+      <button class="btn-city" data-city="Marseille" data-lat="43.2965" data-lon="5.3698">Marseille</button>
+      <button class="btn-city" data-city="Lyon" data-lat="45.7640" data-lon="4.8357">Lyon</button>
+      <button class="btn-city" data-city="Toulouse" data-lat="43.6047" data-lon="1.4442">Toulouse</button>
+      <button class="btn-city" data-city="Nice" data-lat="43.7102" data-lon="7.2620">Nice</button>
+      <button class="btn-city" data-city="Bordeaux" data-lat="44.8378" data-lon="-0.5792">Bordeaux</button>
+
+      <button class="btn-city" data-city="Nantes" data-lat="47.2184" data-lon="-1.5536">Nantes</button>
+      <button class="btn-city" data-city="Strasbourg" data-lat="48.5734" data-lon="7.7521">Strasbourg</button>
+      <button class="btn-city" data-city="Lille" data-lat="50.6292" data-lon="3.0573">Lille</button>
+      <button class="btn-city" data-city="Rennes" data-lat="48.1173" data-lon="-1.6778">Rennes</button>
+    </div>
+
+    <div id="map"></div>
+  </main>
+
+  <footer class="app-footer">
+    <small>
+      Données : 
+      <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a> • 
+      <a href="https://open-meteo.com" target="_blank">Open-Meteo</a>
+    </small>
+  </footer>
+
+  <!-- Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const cities = [
+      { name: 'Paris', lat: 48.8566, lon: 2.3522 },
+      { name: 'Marseille', lat: 43.2965, lon: 5.3698 },
+      { name: 'Lyon', lat: 45.7640, lon: 4.8357 },
+      { name: 'Toulouse', lat: 43.6047, lon: 1.4442 },
+      { name: 'Nice', lat: 43.7102, lon: 7.2620 },
+      { name: 'Bordeaux', lat: 44.8378, lon: -0.5792 },
+      { name: 'Nantes', lat: 47.2184, lon: -1.5536 },
+      { name: 'Strasbourg', lat: 48.5734, lon: 7.7521 },
+      { name: 'Lille', lat: 50.6292, lon: 3.0573 },
+      { name: 'Rennes', lat: 48.1173, lon: -1.6778 }
+    ];
+
+    const map = L.map('map').setView([46.603354, 1.888334], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap',
+      maxZoom: 18
+    }).addTo(map);
+
+    async function getWeatherData(lat, lon) {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+      const response = await fetch(url);
+      return response.json();
+    }
+
+    function getWeatherIcon(code) {
+      const icons = {
+        0: '☀️', 1: '🌤', 2: '⛅', 3: '☁️',
+        45: '🌫', 61: '🌧', 63: '🌧', 65: '🌧',
+        71: '🌨', 95: '⛈'
+      };
+      return icons[code] || '❓';
+    }
+
+    async function addCityMarkers() {
+      for (const city of cities) {
+        const data = await getWeatherData(city.lat, city.lon);
+        if (!data.current_weather) continue;
+
+        const temp = Math.round(data.current_weather.temperature);
+        const icon = getWeatherIcon(data.current_weather.weathercode);
+
+        const markerIcon = L.divIcon({
+          className: 'city-marker',
+          html: `<div><strong>${city.name}</strong><br>${icon} ${temp}°C</div>`,
+          iconSize: [90, 50],
+          iconAnchor: [45, 25]
+        });
+
+        const marker = L.marker([city.lat, city.lon], { icon: markerIcon }).addTo(map);
+        marker.on('click', () => window.location.href = `/index.html?city=${encodeURIComponent(city.name)}`);
+      }
+    }
+
+    document.querySelectorAll('.btn-city').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lat = parseFloat(btn.dataset.lat);
+        const lon = parseFloat(btn.dataset.lon);
+        document.querySelectorAll('.btn-city').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        map.flyTo([lat, lon], 10, { duration: 1.2 });
+      });
+    });
+
+    addCityMarkers();
+  </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard — Météorite</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="background.css">
+    <style>
+      /* NOUVEAU : Gère l'état de chargement de manière sûre */
+      body.is-loading {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+
+      .dashboard-header { display: flex; justify-content: space-between; align-items: center; padding: clamp(16px, 3vw, 32px); max-width: 960px; margin: 0 auto; }
+      #logout-btn { padding: 8px 16px; border-radius: 18px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text); cursor: pointer; transition: background-color 0.2s; }
+      #logout-btn:hover { background: rgba(255, 255, 255, 0.25); }
+      .feedback { padding: 12px; margin: 16px auto; max-width: 960px; border-radius: 12px; text-align: center; display: none; }
+      .feedback.error { background-color: rgba(255, 80, 80, 0.2); color: #ffcdd2; }
+      .feedback.success { background-color: rgba(80, 255, 80, 0.2); color: #c8e6c9; }
+      .city-management { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; margin-bottom: 12px; }
+      #change-city-btn { padding: 8px 16px; border-radius: 18px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1); color: var(--text); cursor: pointer; transition: background-color 0.2s; }
+      #change-city-btn:hover { background: rgba(255, 255, 255, 0.2); }
+    </style>
+  </head>
+  <body class="is-loading">
+    <header class="dashboard-header">
+      <h2>☄️ Météorite</h2>
+      <a href="/settings.html" style="color: var(--text); text-decoration: none;">Paramètres</a>
+      <button id="logout-btn">Déconnexion</button>
+    </header>
+
+    <div id="stars"></div> <div id="stars2"></div> <div id="stars3"></div>
+
+    <main class="content">
+      <section id="city-selector">
+        <h3 id="city-selector-title">Votre ville par défaut</h3>
+        <p id="search-prompt" class="muted">Recherchez une ville pour afficher la météo.</p>
+        <div id="search-container">
+          <form id="search-form" autocomplete="off" role="search">
+            <input id="search" name="q" type="text" placeholder="Ex: Paris, Marseille, Lyon…"/>
+            <div id="suggestions" class="suggestions" role="listbox"></div>
+          </form>
+        </div>
+      </section>
+
+      <div id="feedback" class="feedback"></div>
+
+      <div id="weather-content" hidden>
+        <div class="city-management">
+          <div>
+            <h2 id="loc-name">—</h2>
+            <p id="loc-extra" class="muted">—</p>
+          </div>
+          <button id="change-city-btn">Changer de ville</button>
+        </div>
+        <section class="current">
+          <div class="card">
+            <div class="current-main">
+              <div>
+                <div class="current-temp" id="current-temp">--°C</div>
+                <div class="current-desc" id="current-desc">—</div>
+              </div>
+              <div class="current-icon" id="current-icon">⛅</div>
+            </div>
+            <div class="current-grid">
+              <div><span>Vent</span><strong id="current-wind">— km/h</strong></div>
+              <div><span>Humidité</span><strong id="current-humidity">—%</strong></div>
+              <div><span>Ressenti</span><strong id="current-apparent">—°C</strong></div>
+              <div><span>Pression</span><strong id="current-pressure">— hPa</strong></div>
+            </div>
+            <p class="updated" id="updated">—</p>
+          </div>
+        </section>
+        <section class="forecast">
+          <h3>Prévisions 24h</h3>
+          <div id="hourly" class="hourly"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <small>Source: <a href="https://open-meteo.com" target="_blank">Open‑Meteo</a>.</small>
+    </footer>
+
+    <script src="dashboard.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Paramètres — Météorite</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="background.css">
+    <style>
+      /* Styles similaires aux formulaires d'authentification */
+      .container { max-width: 600px; margin: 40px auto; padding: 20px; }
+      .settings-card {
+        padding: 32px; border-radius: 24px; background: var(--glass-bg);
+        border: 1px solid var(--glass-border); box-shadow: var(--shadow);
+        backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+      }
+      .settings-card h1 { text-align: center; margin-bottom: 24px; }
+      .form-group { margin-bottom: 20px; }
+      .form-group label { display: block; margin-bottom: 8px; color: var(--muted); }
+      .form-group input {
+        width: 100%; padding: 12px 14px; border-radius: 12px;
+        border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1);
+        color: var(--text); font-size: 1rem; outline: none; transition: all 0.2s ease;
+      }
+      .form-group input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(122, 162, 255, 0.2); }
+      .submit-btn {
+        width: 100%; padding: 14px; border-radius: 12px; border: none;
+        background-color: var(--accent); color: white; font-size: 1.1rem;
+        font-weight: 600; cursor: pointer; transition: background-color 0.2s;
+      }
+      .submit-btn:hover { background-color: #8fb0ff; }
+      .feedback {
+        padding: 12px; margin-bottom: 16px; border-radius: 8px;
+        text-align: center; display: none; font-weight: 500;
+      }
+      .feedback.error { background-color: rgba(255, 80, 80, 0.2); color: #ffcdd2; }
+      .feedback.success { background-color: rgba(80, 255, 80, 0.2); color: #c8e6c9; }
+      .nav-link { display: block; text-align: center; margin-top: 20px; color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div id="stars"></div><div id="stars2"></div><div id="stars3"></div>
+
+    <div class="container">
+        <div class="settings-card">
+            <h1>Paramètres du compte</h1>
+            <div id="feedback"></div>
+
+            <form id="password-form">
+                <h2>Changer le mot de passe</h2>
+                <div class="form-group">
+                    <label for="new-password">Nouveau mot de passe (6+ caractères)</label>
+                    <input id="new-password" type="password" required />
+                </div>
+                <button type="submit" class="submit-btn">Mettre à jour le mot de passe</button>
+            </form>
+
+            <hr style="border-color: rgba(255,255,255,0.1); margin: 40px 0;">
+
+            <form id="email-form">
+                <h2>Changer l'adresse e-mail</h2>
+                <p class="form-group" style="color: var(--muted);">Email actuel : <strong id="current-email">—</strong></p>
+                <div class="form-group">
+                    <label for="new-email">Nouvelle adresse e-mail</label>
+                    <input id="new-email" type="email" required />
+                </div>
+                <button type="submit" class="submit-btn">Mettre à jour l'e-mail</button>
+            </form>
+            
+            <a href="/dashboard.html" class="nav-link">Retour au dashboard</a>
+        </div>
+    </div>
+    
+    <script src="settings.js" type="module"></script>
+</body>
+</html>

@@ -7,8 +7,37 @@
     <meta name="description" content="Recherchez votre ville et obtenez la météo en un clin d'œil."/>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="background.css">
+    <style>
+      .login-link {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: var(--accent);
+        text-decoration: none;
+        background: var(--glass-bg);
+        padding: 8px 16px;
+        border-radius: 18px;
+        border: 1px solid var(--glass-border);
+      }
+    </style>
   </head>
+
   <body>
+    <script type="module">
+      import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+      const supabaseUrl = 'https://djpigduzgtzlktpyhhgf.supabase.co'; // Mettez à jour ces valeurs
+      const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqcGlnZHV6Z3R6bGt0cHloaGdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExNTMwMzQsImV4cCI6MjA3NjcyOTAzNH0.xqxv2LGs-dXSXDg_ccXzhAY02lP8KxOZ_TpXXZlmAUQ';
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+      supabase.auth.onAuthStateChange((event, session) => {
+          if (session) {
+              window.location.href = '/dashboard.html';
+          }
+      });
+    </script>
+
+
+    <a href="/login.html" class="login-link">Connexion</a>
     <header class="app-header">
       <h1>☄️ Météorite</h1>
       <p class="tagline">Tapez une ville, obtenez la météo.</p>
@@ -24,24 +53,25 @@
     <div id="stars2"></div>
     <div id="stars3"></div>
 
-    <script>
-      function createStars(id, count, size) {
-        const stars = [];
-        for (let i = 0; i < count; i++) {
-          const x = Math.floor(Math.random() * 2000);
-          const y = Math.floor(Math.random() * 2000);
-          stars.push(`${x}px ${y}px #FFF`);
-        }
-        const el = document.getElementById(id);
-        el.style.width = size + 'px';
-        el.style.height = size + 'px';
-        el.style.boxShadow = stars.join(', ');
+  <script>
+    function createStars(id, count, size) {
+      const stars = [];
+      for (let i = 0; i < count; i++) {
+        const x = Math.floor(Math.random() * 2000);
+        const y = Math.floor(Math.random() * 2000);
+        stars.push(`${x}px ${y}px #FFF`);
       }
+      const el = document.getElementById(id);
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+      el.style.boxShadow = stars.join(', ');
+    }
 
-      createStars('stars', 200, 1);   // Petites étoiles (200)
-      createStars('stars2', 100, 2);  // Moyennes (100)
-      createStars('stars3', 50, 3);   // Grosses (50)
-    </script>
+    createStars('stars', 200, 1);   // Petites étoiles (200)
+    createStars('stars2', 100, 2);  // Moyennes (100)
+    createStars('stars3', 50, 3);   // Grosses (50)
+  </script>
+
 
     <main id="content" class="content" hidden>
       <section class="location">

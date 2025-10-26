@@ -1,111 +1,260 @@
-/* Météorite v1 — styles minimalistes */
-:root{
-  --bg:#0f1222;
-  --panel:#161a33;
-  --panel-2:#1b2042;
-  --text:#e9ecff;
-  --muted:#aab1d7;
-  --accent:#7aa2ff;
-  --ok:#7ad3a8;
-  --shadow: 0 8px 30px rgba(0,0,0,.35);
+/* 🌌 Météorite v3 — effet Liquid Glass façon Apple */
+
+:root {
+  --bg: #0f1222;
+  --text: #e9ecff;
+  --muted: #aab1d7;
+  --accent: #7aa2ff;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+
+  /* effet verre liquide */
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glass-highlight: rgba(255, 255, 255, 0.4);
+  --glass-blur: 30px;
+  --glass-sat: 160%;
 }
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji","Segoe UI Emoji";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial;
   background: radial-gradient(1200px 800px at 10% -10%, #1d2347 0%, var(--bg) 50%) fixed, var(--bg);
-  color:var(--text);
-  line-height:1.4;
+  color: var(--text);
+  line-height: 1.4;
+  overflow-x: hidden;
 }
-a{color:var(--accent)}
-.app-header{
+
+/* HEADER */
+.app-header {
   padding: clamp(16px, 3vw, 32px);
-  text-align:center;
+  text-align: center;
 }
-h1{font-size: clamp(28px, 5vw, 44px); margin:0}
-.tagline{margin:.25rem 0 1rem;color:var(--muted)}
-#search-form{
-  margin:0 auto;
-  display:flex;
-  gap:8px;
-  justify-content:center;
-  position:relative;
-  max-width:720px;
+h1 {
+  font-size: clamp(28px, 5vw, 44px);
+  margin: 0;
 }
-#search{
+.tagline {
+  margin: 0.25rem 0 1rem;
+  color: var(--muted);
+}
+
+/* RECHERCHE — style Apple glass */
+#search-form {
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  position: relative;
+  max-width: 720px;
+}
+
+#search,
+#search-form button {
+  border-radius: 22px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  color: var(--text);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+#search {
   width: min(680px, 90vw);
-  padding:14px 16px;
-  border-radius:14px;
-  border:1px solid transparent;
-  background: var(--panel);
-  color:var(--text);
-  outline:none;
-  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  outline: none;
+  font-size: 1rem;
 }
-#search:focus{border-color:var(--accent)}
-#search-form button{
+#search::placeholder {
+  color: var(--muted);
+}
+#search:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(122, 162, 255, 0.3);
+}
+#search-form button {
   padding: 0 14px;
-  border-radius:12px;
-  border:1px solid transparent;
-  background: var(--panel-2);
-  color:var(--text);
-  cursor:pointer;
-  box-shadow: var(--shadow);
+  cursor: pointer;
+  font-size: 1.2rem;
 }
-.suggestions{
-  position:absolute; top:100%; left:0; right:56px;
-  background: var(--panel);
-  border:1px solid #2a2f5b;
-  border-radius: 12px;
-  margin-top:8px; overflow:hidden;
-  display:none; max-height: 280px; overflow-y:auto;
+#search-form button:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* SUGGESTIONS */
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 56px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  margin-top: 8px;
+  overflow: hidden;
+  display: none;
+  max-height: 280px;
+  overflow-y: auto;
   box-shadow: var(--shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
   z-index: 10;
 }
-.suggestions.show{display:block}
-.suggestions button{
-  display:block; width:100%;
-  text-align:left; padding:10px 12px; background:transparent; color:var(--text);
-  border:0; cursor:pointer;
+.suggestions.show {
+  display: block;
 }
-.suggestions button:hover{background: #1c2246}
-
-.content{
-  max-width: 960px; margin: 12px auto 48px; padding: 0 16px;
+.suggestions button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  cursor: pointer;
 }
-.location{margin: 10px 0 16px}
-.location h2{margin:0; font-size: clamp(20px, 3vw, 28px)}
-.muted{color:var(--muted)}
+.suggestions button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
 
-.card{
-  background: linear-gradient(180deg, var(--panel), var(--panel-2));
-  border: 1px solid #2a2f5b;
+/* CONTENU */
+.content {
+  max-width: 960px;
+  margin: 12px auto 48px;
+  padding: 0 16px;
+}
+.location h2 {
+  margin: 0;
+  font-size: clamp(20px, 3vw, 28px);
+}
+.muted {
+  color: var(--muted);
+}
+
+/* CARTE PRINCIPALE — verre liquide */
+.card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, var(--glass-highlight), transparent 60%);
+  opacity: 0.15;
+  pointer-events: none;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+}
+
+/* Détails météo */
+.current-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.current-temp {
+  font-size: clamp(40px, 8vw, 72px);
+  font-weight: 700;
+}
+.current-desc {
+  color: var(--muted);
+  margin-top: 4px;
+}
+.current-icon {
+  font-size: clamp(48px, 8vw, 80px);
+}
+
+/* Petits blocs */
+.current-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.current-grid div {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(20px) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(20px) saturate(var(--glass-sat));
+}
+.updated {
+  margin: 12px 4px 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* HEURES */
+.hourly {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.hour {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-border);
   border-radius: 18px;
-  padding: 16px;
-  box-shadow: var(--shadow);
+  padding: 10px;
+  text-align: center;
+  backdrop-filter: blur(20px) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(20px) saturate(var(--glass-sat));
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.current-main{
-  display:flex; align-items:center; justify-content:space-between;
+.hour:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
-.current-temp{font-size: clamp(40px, 8vw, 72px); font-weight:700}
-.current-desc{color:var(--muted); margin-top:4px}
-.current-icon{font-size: clamp(48px, 8vw, 80px)}
-.current-grid{
-  display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-top: 12px;
+.hour strong {
+  display: block;
+  font-size: 1.1rem;
 }
-.current-grid div{
-  background: rgba(255,255,255,0.03);
-  padding: 10px 12px; border-radius: 12px; display:flex; align-items:center; justify-content:space-between;
-  border:1px solid #2a2f5b;
+.hour .icon {
+  font-size: 24px;
+  margin: 6px 0;
 }
-.updated{margin: 12px 4px 0; color: var(--muted); font-size: .9rem}
 
-.hourly{display:grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap: 10px; margin-top:12px}
-.hour{background: rgba(255,255,255,0.04); border:1px solid #2a2f5b; border-radius: 14px; padding: 10px; text-align:center}
-.hour strong{display:block; font-size: 1.1rem}
-.hour .icon{font-size: 24px; margin: 6px 0}
-.app-footer{padding: 32px; text-align:center; color:var(--muted)}
+/* FOOTER */
+.app-footer {
+  padding: 32px;
+  text-align: center;
+  color: var(--muted);
+}
 
 /* Accessibilité */
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

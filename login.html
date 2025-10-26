@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Connexion — Météorite</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="background.css">
+    <style>
+      /* Styles spécifiques pour les formulaires d'authentification */
+      .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .auth-form {
+        width: 100%;
+        max-width: 400px;
+        padding: 32px;
+        border-radius: 24px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+      }
+      .auth-form h1 {
+        text-align: center;
+        margin-bottom: 24px;
+        font-size: 28px;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--glass-border);
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text);
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+      .form-group input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 10px rgba(122, 162, 255, 0.2);
+      }
+      .auth-button {
+        width: 100%;
+        padding: 14px;
+        border-radius: 12px;
+        border: none;
+        background-color: var(--accent);
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .auth-button:hover {
+        background-color: #8fb0ff;
+      }
+      .auth-link {
+        text-align: center;
+        margin-top: 20px;
+        color: var(--muted);
+      }
+      .auth-link a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .auth-link a:hover {
+        text-decoration: underline;
+      }
+      .feedback {
+        padding: 10px;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        text-align: center;
+        display: none;
+      }
+      .feedback.error { background-color: rgba(255, 80, 80, 0.2); color: #ffcdd2; }
+      .feedback.success { background-color: rgba(80, 255, 80, 0.2); color: #c8e6c9; }
+
+      .login-link {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: var(--accent);
+        text-decoration: none;
+        background: var(--glass-bg);
+        padding: 8px 16px;
+        border-radius: 18px;
+        border: 1px solid var(--glass-border);
+      }
+    </style>
+</head>
+<body>
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+
+    <a href="/index.html" class="login-link">Accueil</a>
+
+    <div class="auth-container">
+        <div class="auth-form">
+            <form id="login-form">
+                <h1>Connexion</h1>
+                <div id="feedback" class="feedback"></div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input id="password" type="password" name="password" required>
+                </div>
+                <button type="submit" class="auth-button">Se connecter</button>
+            </form>
+            <p class="auth-link" style="margin-top: 10px;">
+            <a href="settings.html" id="forgot-password-link">Mot de passe oublié ?</a>
+            </p>
+            <p class="auth-link">Pas encore de compte ? <a href="register.html">Inscrivez-vous</a></p>
+        </div>
+    </div>
+    
+    <script src="auth.js" type="module"></script>
+</body>
+</html>

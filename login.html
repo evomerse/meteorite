@@ -20,7 +20,6 @@
         <a href="carte.html" class="nav-item">Carte</a>
         <a href="dashboard.html" class="nav-item">Dashboard</a>
         <div class="nav-auth-mobile">
-          <a href="login.html" class="nav-button">Connexion</a>
           <a href="register.html" class="nav-button accent">Inscription</a>
         </div>
       </div>
@@ -82,6 +81,18 @@
     <div class="strap-left"></div>
     <div class="strap-right"></div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.getElementById("navToggle");
+    const links = document.getElementById("navLinks");
+
+    toggle.addEventListener("click", () => {
+      links.classList.toggle("open");
+      toggle.textContent = links.classList.contains("open") ? "✕" : "☰";
+    });
+  });
+  </script>
 
 
 </body>

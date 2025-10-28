@@ -4,113 +4,32 @@
     <meta charset="utf-t" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Inscription — Météorite</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="stylelogin.css" />
     <link rel="stylesheet" href="background.css">
-    <style>
-      /* Styles spécifiques pour les formulaires d'authentification (identiques à login.html) */
-      .auth-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 20px;
-      }
-      .auth-form {
-        width: 100%;
-        max-width: 400px;
-        padding: 32px;
-        border-radius: 24px;
-        background: var(--glass-bg);
-        border: 1px solid var(--glass-border);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-      }
-      .auth-form h1 {
-        text-align: center;
-        margin-bottom: 24px;
-        font-size: 28px;
-      }
-      .form-group {
-        margin-bottom: 16px;
-      }
-      .form-group label {
-        display: block;
-        margin-bottom: 6px;
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-      .form-group input {
-        width: 100%;
-        padding: 12px 14px;
-        border-radius: 12px;
-        border: 1px solid var(--glass-border);
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--text);
-        font-size: 1rem;
-        outline: none;
-        transition: all 0.2s ease;
-      }
-      .form-group input:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 10px rgba(122, 162, 255, 0.2);
-      }
-      .auth-button {
-        width: 100%;
-        padding: 14px;
-        border-radius: 12px;
-        border: none;
-        background-color: var(--accent);
-        color: white;
-        font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s;
-      }
-      .auth-button:hover {
-        background-color: #8fb0ff;
-      }
-      .auth-link {
-        text-align: center;
-        margin-top: 20px;
-        color: var(--muted);
-      }
-      .auth-link a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-      .auth-link a:hover {
-        text-decoration: underline;
-      }
-      .feedback {
-        padding: 10px;
-        margin-bottom: 16px;
-        border-radius: 8px;
-        text-align: center;
-        display: none;
-      }
-      .feedback.error { background-color: rgba(255, 80, 80, 0.2); color: #ffcdd2; }
-      .feedback.success { background-color: rgba(80, 255, 80, 0.2); color: #c8e6c9; }
-
-    .login-link {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        color: var(--accent);
-        text-decoration: none;
-        background: var(--glass-bg);
-        padding: 8px 16px;
-        border-radius: 18px;
-        border: 1px solid var(--glass-border);
-      }
-    </style>
+    
 </head>
 <body>
     <div id="stars"></div>
     <div id="stars2"></div>
     <div id="stars3"></div>
 
-    <a href="/index.html" class="login-link">Accueil</a>
+    <nav class="app-navbar">
+      <div class="nav-logo">
+        <a href="index.html"><img src="/images/Logo_meteorite2.png" alt="">Météorite</a>
+      </div>
+
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-item">Accueil</a>
+        <a href="carte.html" class="nav-item">Carte</a>
+        <a href="dashboard.html" class="nav-item">Dashboard</a>
+        <div class="nav-auth-mobile">
+          <a href="login.html" class="nav-button">Connexion</a>
+        </div>
+      </div>
+
+
+      <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu">☰</button>
+    </nav>
 
     <div class="auth-container">
         <div class="auth-form">
@@ -118,12 +37,12 @@
                 <h1>Créer un compte</h1>
                 <div id="feedback" class="feedback"></div>
                 <div class="form-group">
-                    <label for="email">Email</label>
                     <input id="email" type="email" name="email" required>
+                    <label for="email">Email</label>
                 </div>
                 <div class="form-group">
-                    <label for="password">Mot de passe (6+ caractères)</label>
                     <input id="password" type="password" name="password" required>
+                    <label for="password">Mot de passe (6+ caractères)</label>
                 </div>
                 <button type="submit" class="auth-button">S'inscrire</button>
             </form>
@@ -132,5 +51,31 @@
     </div>
     
     <script src="auth.js" type="module"></script>
+
+  <div class="astronaut bg-astronaut" aria-hidden="true">
+    <div class="head"></div>
+    <div class="arm arm-left"></div>
+    <div class="arm arm-right"></div>
+    <div class="body">
+      <div class="panel"></div>
+    </div>
+    <div class="leg leg-left"></div>
+    <div class="leg leg-right"></div>
+    <div class="schoolbag"></div>
+    <div class="strap-left"></div>
+    <div class="strap-right"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.getElementById("navToggle");
+    const links = document.getElementById("navLinks");
+
+    toggle.addEventListener("click", () => {
+      links.classList.toggle("open");
+      toggle.textContent = links.classList.contains("open") ? "✕" : "☰";
+    });
+  });
+  </script>
 </body>
 </html>

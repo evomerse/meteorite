@@ -23,8 +23,13 @@ const els = {
   changeCityBtn: document.getElementById('change-city-btn'),
   logoutBtn: document.getElementById('logout-btn'),
   feedback: document.getElementById('feedback'),
+  newsletterSection: document.getElementById('newsletter-section'),
+  newsletterBtn: document.getElementById('newsletter-btn'),
+  newsletterBtnText: document.getElementById('newsletter-btn-text'),
+  newsletterStatus: document.getElementById('newsletter-status'),
 };
 let eventListenersInitialized = false;
+let currentCity = null; // Stocke la ville actuellement affichée
 
 // --- Fonctions utilitaires ---
 const weatherMap = [
@@ -82,15 +87,26 @@ function showFeedback(message, isError = false) {
 }
 
 // --- Interface ---
-function updateUI(city) {
+function updateUI(city, user) {
+  currentCity = city; // Sauvegarder la ville actuelle
+  
   if (city) {
     els.citySelector.hidden = true;
     els.weatherContent.hidden = false;
     els.locName.textContent = city.name;
     els.locExtra.textContent = [city.admin1, city.country].filter(Boolean).join(' · ');
+    
+    // Afficher la section newsletter uniquement pour les utilisateurs connectés
+    if (user && els.newsletterSection) {
+      els.newsletterSection.style.display = 'block';
+      checkNewsletterSubscription(user, city);
+    } else if (els.newsletterSection) {
+      els.newsletterSection.style.display = 'none';
+    }
   } else {
     els.citySelector.hidden = false;
     els.weatherContent.hidden = true;
+    if (els.newsletterSection) els.newsletterSection.style.display = 'none';
   }
 }
 
@@ -171,8 +187,139 @@ async function saveDefaultCity(user, city) {
     showFeedback(`Ville enregistrée localement : ${city.name}`, false);
   }
 
-  updateUI(cityData);
+  updateUI(cityData, user);
   await displayWeather(cityData);
+}
+
+// --- Gestion des abonnements newsletter ---
+async function checkNewsletterSubscription(user, city) {
+  if (!user || !city) return;
+  
+  try {
+    const { data, error } = await supabase
+      .from('newsletter_subscriptions')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('city_name', city.name)
+      .eq('city_latitude', city.latitude)
+      .eq('city_longitude', city.longitude)
+      .maybeSingle();
+    
+    if (error && error.code !== 'PGRST116') {
+      console.error('Erreur vérification abonnement:', error);
+      return;
+    }
+    
+    if (data && data.active) {
+      els.newsletterBtn.classList.add('active');
+      els.newsletterBtnText.textContent = '✉️ Désabonner des bulletins hebdomadaires';
+      els.newsletterStatus.textContent = '✓ Vous recevez les bulletins météo hebdomadaires pour cette ville';
+    } else {
+      els.newsletterBtn.classList.remove('active');
+      els.newsletterBtnText.textContent = '📧 Recevoir les bulletins météo hebdomadaires';
+      els.newsletterStatus.textContent = '';
+    }
+  } catch (err) {
+    console.error('Erreur lors de la vérification:', err);
+  }
+}
+
+async function toggleNewsletterSubscription(user, city) {
+  if (!user || !city) {
+    showFeedback('Vous devez être connecté pour activer cette fonctionnalité.', true);
+    return;
+  }
+  
+  try {
+    // Vérifier si un abonnement existe déjà
+    const { data: existing } = await supabase
+      .from('newsletter_subscriptions')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('city_name', city.name)
+      .eq('city_latitude', city.latitude)
+      .eq('city_longitude', city.longitude)
+      .maybeSingle();
+    
+    if (existing && existing.active) {
+      // Désabonner
+      const { error } = await supabase
+        .from('newsletter_subscriptions')
+        .update({ active: false })
+        .eq('id', existing.id);
+      
+      if (error) throw error;
+      
+      showFeedback('Vous avez été désabonné des bulletins météo.', false);
+      checkNewsletterSubscription(user, city);
+    } else {
+      // Abonner - créer ou réactiver
+      const subscriptionData = {
+        user_id: user.id,
+        email: user.email,
+        city_name: city.name,
+        city_admin1: city.admin1 || null,
+        city_country: city.country || null,
+        city_latitude: city.latitude,
+        city_longitude: city.longitude,
+        city_timezone: city.timezone || null,
+        active: true,
+      };
+      
+      let result;
+      if (existing) {
+        // Réactiver un abonnement existant
+        result = await supabase
+          .from('newsletter_subscriptions')
+          .update({ ...subscriptionData, updated_at: new Date().toISOString() })
+          .eq('id', existing.id)
+          .select()
+          .single();
+      } else {
+        // Créer un nouvel abonnement
+        result = await supabase
+          .from('newsletter_subscriptions')
+          .insert(subscriptionData)
+          .select()
+          .single();
+      }
+      
+      if (result.error) throw result.error;
+      
+      showFeedback('Bulletins météo hebdomadaires activés ! Vous recevrez un bulletin immédiatement.', false);
+      
+      // Envoyer le bulletin immédiatement
+      await sendNewsletterNow(user, city);
+      
+      checkNewsletterSubscription(user, city);
+    }
+  } catch (err) {
+    console.error('Erreur lors de la gestion de l\'abonnement:', err);
+    showFeedback('Erreur lors de l\'activation. Veuillez réessayer.', true);
+  }
+}
+
+async function sendNewsletterNow(user, city) {
+  try {
+    // Appeler une Edge Function Supabase pour envoyer le bulletin
+    const { data, error } = await supabase.functions.invoke('send-newsletter', {
+      body: {
+        userId: user.id,
+        email: user.email,
+        city: city,
+        immediate: true
+      }
+    });
+    
+    if (error) {
+      console.error('Erreur envoi bulletin:', error);
+      // Ne pas afficher d'erreur à l'utilisateur car l'abonnement a été créé
+    } else {
+      console.log('Bulletin envoyé avec succès');
+    }
+  } catch (err) {
+    console.error('Erreur lors de l\'envoi du bulletin:', err);
+  }
 }
 
 // --- Écouteurs d’événements ---
@@ -182,9 +329,20 @@ function setupEventListeners(user) {
   if (els.logoutBtn)
     els.logoutBtn.addEventListener('click', () => supabase.auth.signOut());
 
+  if (els.newsletterBtn) {
+    els.newsletterBtn.addEventListener('click', () => {
+      if (!currentCity || !currentCity.latitude || !currentCity.longitude) {
+        showFeedback('Ville non trouvée. Veuillez sélectionner une ville.', true);
+        return;
+      }
+      
+      toggleNewsletterSubscription(user, currentCity);
+    });
+  }
+
   if (els.changeCityBtn)
     els.changeCityBtn.addEventListener('click', () => {
-      updateUI(null);
+      updateUI(null, user);
       els.searchInput.focus();
     });
 
@@ -274,8 +432,8 @@ async function initializeDashboard(user) {
     if (stored) defaultCity = JSON.parse(stored);
   }
 
-  // 3) Mettre à jour l’UI et la météo
-  updateUI(defaultCity);
+  // 3) Mettre à jour l'UI et la météo
+  updateUI(defaultCity, user);
   await displayWeather(defaultCity);
 
   els.body.classList.remove('is-loading');

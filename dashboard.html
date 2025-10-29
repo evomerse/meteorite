@@ -23,6 +23,10 @@
       .city-management { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; margin-bottom: 12px; }
       #change-city-btn { padding: 8px 16px; border-radius: 18px; border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.1); color: var(--text); cursor: pointer; transition: background-color 0.2s; }
       #change-city-btn:hover { background: rgba(255, 255, 255, 0.2); }
+      .newsletter-btn { width: 100%; padding: 12px 16px; border-radius: 18px; border: 1px solid var(--glass-border); background: var(--accent); color: white; cursor: pointer; transition: all 0.3s; font-weight: 500; font-size: 0.95rem; }
+      .newsletter-btn:hover { background: #8bb1ff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(122, 162, 255, 0.4); }
+      .newsletter-btn.active { background: rgba(255, 80, 80, 0.2); border-color: rgba(255, 80, 80, 0.5); color: #ffcdd2; }
+      .newsletter-btn.active:hover { background: rgba(255, 80, 80, 0.3); }
     </style>
   </head>
   <body class="is-loading">
@@ -72,6 +76,12 @@
               <div><span>Pression</span><strong id="current-pressure">— hPa</strong></div>
             </div>
             <p class="updated" id="updated">—</p>
+            <div id="newsletter-section" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--glass-border); display: none;">
+              <button id="newsletter-btn" class="newsletter-btn">
+                <span id="newsletter-btn-text">📧 Recevoir les bulletins météo hebdomadaires</span>
+              </button>
+              <p id="newsletter-status" class="muted" style="margin-top: 8px; font-size: 0.9rem;"></p>
+            </div>
           </div>
         </section>
         <section class="forecast">
